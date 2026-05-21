@@ -37,6 +37,7 @@ import at.helpch.chatchat.placeholder.PlaceholderAPIPlaceholders;
 import at.helpch.chatchat.rule.RuleManagerImpl;
 import at.helpch.chatchat.user.UserSenderValidator;
 import at.helpch.chatchat.user.UsersHolderImpl;
+import at.helpch.chatchat.util.CommandAliasClaimer;
 import at.helpch.chatchat.util.DumpUtils;
 import dev.triumphteam.annotations.BukkitMain;
 import dev.triumphteam.cmd.bukkit.BukkitCommandManager;
@@ -295,6 +296,7 @@ public final class ChatChatPlugin extends JavaPlugin {
                 new WhisperToggleCommand(this),
                 new SocialSpyCommand(this)
             ).forEach(commandManager::registerCommand);
+            claimPrivateMessageCommandAliases();
         }
 
         // register channel commands
@@ -303,5 +305,19 @@ public final class ChatChatPlugin extends JavaPlugin {
             .filter(s -> !s.isEmpty())
             .map(commandNames -> new SwitchChannelCommand(this, commandNames.get(0), commandNames.subList(1, commandNames.size())))
             .forEach(commandManager::registerCommand);
+    }
+
+    private void claimPrivateMessageCommandAliases() {
+        final var whisperClaimed = CommandAliasClaimer.claimAliases(
+            this,
+            "whisper",
+            List.of("whisper", "tell", "w", "msg", "message", "pm", "m")
+        );
+        final var replyClaimed = CommandAliasClaimer.claimAliases(this, "reply", List.of("reply", "r"));
+
+        if (!whisperClaimed || !replyClaimed) {
+            getLogger().warning("Could not claim every private-message command alias. "
+                + "Server commands.yml aliases may still be required for private messages.");
+        }
     }
 }
