@@ -1,10 +1,12 @@
 package at.helpch.chatchat.command;
 
 import dev.triumphteam.cmd.core.annotation.Default;
+import dev.triumphteam.cmd.core.annotation.Command;
 import dev.triumphteam.cmd.core.annotation.Optional;
 import dev.triumphteam.cmd.core.annotation.SubCommand;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -49,5 +51,12 @@ class CommandRegistrationShapeTest {
                 }
             }
         }
+    }
+
+    @Test
+    void whisperDoesNotClaimShortMCommandAlias() {
+        final var command = WhisperCommand.class.getAnnotation(Command.class);
+
+        assertFalse(Arrays.asList(command.alias()).contains("m"));
     }
 }

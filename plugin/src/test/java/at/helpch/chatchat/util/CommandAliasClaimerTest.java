@@ -20,24 +20,27 @@ class CommandAliasClaimerTest {
         final var vanillaMessage = new DummyCommand("msg");
         final var chatChatWhisper = new DummyCommand("whisper");
 
+        final var customM = new DummyCommand("m");
+
         knownCommands.put("minecraft:msg", vanillaMessage);
         knownCommands.put("msg", vanillaMessage);
+        knownCommands.put("m", customM);
         knownCommands.put("chatchat:whisper", chatChatWhisper);
 
         final var claimed = CommandAliasClaimer.claimAliases(
             knownCommands,
             "ChatChat",
             "whisper",
-            List.of("msg", "tell", "w", "m")
+            List.of("msg", "tell", "w")
         );
 
         assertTrue(claimed);
         assertSame(chatChatWhisper, knownCommands.get("msg"));
         assertSame(chatChatWhisper, knownCommands.get("tell"));
         assertSame(chatChatWhisper, knownCommands.get("w"));
-        assertSame(chatChatWhisper, knownCommands.get("m"));
         assertSame(chatChatWhisper, knownCommands.get("chatchat:msg"));
         assertSame(vanillaMessage, knownCommands.get("minecraft:msg"));
+        assertSame(customM, knownCommands.get("m"));
     }
 
     @Test

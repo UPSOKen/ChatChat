@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.LinkedHashMap;
 import java.util.stream.Collectors;
 
-@Command(value = "whisper", alias = {"tell", "w", "msg", "message", "pm", "m"})
+@Command(value = "whisper", alias = {"tell", "w", "msg", "message", "pm"})
 public final class WhisperCommand extends BaseCommand {
 
     private static final String MESSAGE_PERMISSION = "chatchat.pm";

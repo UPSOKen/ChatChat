@@ -311,7 +311,7 @@ public final class ChatChatPlugin extends JavaPlugin {
         final var whisperClaimed = CommandAliasClaimer.claimAliases(
             this,
             "whisper",
-            List.of("whisper", "tell", "w", "msg", "message", "pm", "m")
+            List.of("whisper", "tell", "w", "msg", "message", "pm")
         );
         final var replyClaimed = CommandAliasClaimer.claimAliases(this, "reply", List.of("reply", "r"));
 
