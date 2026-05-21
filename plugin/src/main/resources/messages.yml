@@ -21,6 +21,19 @@ already-ignored: <red>You are already ignoring <player>.
 not-ignored: <red>You are not ignoring <player>.
 cant-message-ignored-player: <red>You cannot message a player who you ignore.
 cant-message-general: <red>You cannot message this player.
+deafen-enabled: <green>You are now deafened from public chat.
+deafen-disabled: <green>You are no longer deafened from public chat.
+deafen-timed: <green>You are deafened from public chat until <expires>.
+deafen-still-active: <yellow>You are still deafened from public chat until <expires>.
+deafen-invalid-time: <red>Invalid deafen time. Use a positive duration like 5m, 1h, or 3d.
+deafen-status-none: <green><player> is not deafened.
+deafen-status-permanent: <yellow><player> is permanently deafened from public chat.
+deafen-status-temporary: <yellow><player> is deafened from public chat until <expires>.
+deafen-admin-enabled: <green><player> is now permanently deafened from public chat.
+deafen-admin-timed: <green><player> is deafened from public chat until <expires>.
+deafen-admin-cleared: <green><player> is no longer deafened from public chat.
+deafen-admin-list-none: <green>No online players are deafened from public chat.
+deafen-admin-list: '<yellow>Online deafened players: <players>'
 
 channel-no-permission: <red>You do not have permission to use this channel!
 channel-switched: <green>You have switched to the <channel> channel!

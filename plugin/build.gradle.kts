@@ -43,6 +43,10 @@ dependencies {
     compileOnly(libs.discordsrv)
     compileOnly(libs.supervanish)
     compileOnly(libs.griefprevention)
+
+    testImplementation(platform(libs.junit.bom))
+    testImplementation(libs.gson)
+    testImplementation(libs.junit.jupiter)
 }
 
 val yaml = bukkitPluginYaml {
@@ -62,6 +66,10 @@ val yaml = bukkitPluginYaml {
     permissions {
         create("chatchat.admin") {
             description = "Execute admin commands"
+            default = Permission.Default.OP
+        }
+        create("chatchat.admin.deafen") {
+            description = "Manage player deafens"
             default = Permission.Default.OP
         }
         create("chatchat.socialspy") {
@@ -94,6 +102,11 @@ val yaml = bukkitPluginYaml {
 
         create("chatchat.ignorelist") {
             description = "List all the players that you are ignoring."
+            default = Permission.Default.OP
+        }
+
+        create("chatchat.deafen") {
+            description = "Deafen yourself from public chat"
             default = Permission.Default.OP
         }
 
@@ -213,6 +226,10 @@ sourceSets.main {
 }
 
 tasks {
+    test {
+        useJUnitPlatform()
+    }
+
     withType<ShadowJar> {
         listOf(
             "net.kyori",

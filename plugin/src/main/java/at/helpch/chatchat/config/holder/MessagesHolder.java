@@ -48,6 +48,19 @@ public final class MessagesHolder {
     private Component chatEnabledSuccessfully = text("Your chat has been enabled successfully!", GREEN);
     private Component chatDisabledSuccessfully = text("Your chat has been disabled successfully!", RED);
     private Component chatDisabled = text("Your chat is disabled! You can not send or receive messages until you enable it.", RED);
+    private Component deafenEnabled = text("You are now deafened from public chat.", GREEN);
+    private Component deafenDisabled = text("You are no longer deafened from public chat.", GREEN);
+    private Component deafenTimed = text("You are deafened from public chat until <expires>.", GREEN);
+    private Component deafenStillActive = text("You are still deafened from public chat until <expires>.", YELLOW);
+    private Component deafenInvalidTime = text("Invalid deafen time. Use a positive duration like 5m, 1h, or 3d.", RED);
+    private Component deafenStatusNone = text("<player> is not deafened.", GREEN);
+    private Component deafenStatusPermanent = text("<player> is permanently deafened from public chat.", YELLOW);
+    private Component deafenStatusTemporary = text("<player> is deafened from public chat until <expires>.", YELLOW);
+    private Component deafenAdminEnabled = text("<player> is now permanently deafened from public chat.", GREEN);
+    private Component deafenAdminTimed = text("<player> is deafened from public chat until <expires>.", GREEN);
+    private Component deafenAdminCleared = text("<player> is no longer deafened from public chat.", GREEN);
+    private Component deafenAdminListNone = text("No online players are deafened from public chat.", GREEN);
+    private Component deafenAdminList = text("Online deafened players: <players>", YELLOW);
 
     // channel related
     private Component channelNoPermission = text("You do not have permission to use this channel", RED);
@@ -243,6 +256,57 @@ public final class MessagesHolder {
         return chatDisabled;
     }
 
+    public @NotNull Component deafenEnabled() {
+        return deafenEnabled;
+    }
+
+    public @NotNull Component deafenDisabled() {
+        return deafenDisabled;
+    }
+
+    public @NotNull Component deafenTimed() {
+        return deafenTimed;
+    }
+
+    public @NotNull Component deafenStillActive() {
+        return deafenStillActive;
+    }
+
+    public @NotNull Component deafenInvalidTime() {
+        return deafenInvalidTime;
+    }
+
+    public @NotNull Component deafenStatusNone() {
+        return deafenStatusNone;
+    }
+
+    public @NotNull Component deafenStatusPermanent() {
+        return deafenStatusPermanent;
+    }
+
+    public @NotNull Component deafenStatusTemporary() {
+        return deafenStatusTemporary;
+    }
+
+    public @NotNull Component deafenAdminEnabled() {
+        return deafenAdminEnabled;
+    }
+
+    public @NotNull Component deafenAdminTimed() {
+        return deafenAdminTimed;
+    }
+
+    public @NotNull Component deafenAdminCleared() {
+        return deafenAdminCleared;
+    }
+
+    public @NotNull Component deafenAdminListNone() {
+        return deafenAdminListNone;
+    }
+
+    public @NotNull Component deafenAdminList() {
+        return deafenAdminList;
+    }
 
     public @NotNull Component rangedChatEnabledSuccessfully() {
         return rangedChatEnabledSuccessfully;

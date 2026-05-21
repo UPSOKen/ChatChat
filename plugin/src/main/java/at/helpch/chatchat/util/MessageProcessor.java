@@ -128,6 +128,10 @@ public final class MessageProcessor {
         var userIsTarget = false;
 
         for (final var target : chatEvent.recipients()) {
+            if (target instanceof ChatUser && plugin.deafenManager().isDeafened(target.uuid())) {
+                continue;
+            }
+
             if (target.uuid() == user.uuid()) {
                 userIsTarget = true;
                 continue;

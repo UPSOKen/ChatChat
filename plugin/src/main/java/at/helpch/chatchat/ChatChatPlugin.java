@@ -12,6 +12,7 @@ import at.helpch.chatchat.command.FormatTestCommand;
 import at.helpch.chatchat.command.IgnoreCommand;
 import at.helpch.chatchat.command.IgnoreListCommand;
 import at.helpch.chatchat.command.MainCommand;
+import at.helpch.chatchat.command.ManageDeafenCommand;
 import at.helpch.chatchat.command.MentionToggleCommand;
 import at.helpch.chatchat.command.RangedChatCommand;
 import at.helpch.chatchat.command.ReloadCommand;
@@ -19,12 +20,14 @@ import at.helpch.chatchat.command.ReplyCommand;
 import at.helpch.chatchat.command.SocialSpyCommand;
 import at.helpch.chatchat.command.SwitchChannelCommand;
 import at.helpch.chatchat.command.UnignoreCommand;
+import at.helpch.chatchat.command.DeafenCommand;
 import at.helpch.chatchat.command.WhisperCommand;
 import at.helpch.chatchat.command.WhisperToggleCommand;
 import at.helpch.chatchat.api.hook.Hook;
 import at.helpch.chatchat.config.ConfigManager;
 import at.helpch.chatchat.data.base.Database;
 import at.helpch.chatchat.data.impl.gson.GsonDatabase;
+import at.helpch.chatchat.deafen.DeafenManager;
 import at.helpch.chatchat.hooks.HookManagerImpl;
 import at.helpch.chatchat.listener.ChatListener;
 import at.helpch.chatchat.listener.PlayerListener;
@@ -50,6 +53,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 
+import java.time.Clock;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -75,6 +79,8 @@ public final class ChatChatPlugin extends JavaPlugin {
     final MentionManagerImpl mentionsManager = new MentionManagerImpl(this);
     private @NotNull
     final MiniPlaceholderManagerImpl miniPlaceholdersManager = new MiniPlaceholderManagerImpl();
+    private @NotNull
+    final DeafenManager deafenManager = new DeafenManager(this.getDataFolder().toPath().resolve("deafens.json"), Clock.systemUTC());
     private @NotNull
     final ChatChatAPIImpl api = new ChatChatAPIImpl(this);
 
@@ -203,6 +209,10 @@ public final class ChatChatPlugin extends JavaPlugin {
         return miniPlaceholdersManager;
     }
 
+    public @NotNull DeafenManager deafenManager() {
+        return deafenManager;
+    }
+
     public @NotNull ChatChatAPIImpl api() {
         return api;
     }
@@ -232,6 +242,11 @@ public final class ChatChatPlugin extends JavaPlugin {
                 .collect(Collectors.toUnmodifiableList())
         );
         commandManager.registerSuggestion(SuggestionKey.of("files"), (sender, context) -> DumpUtils.FILES);
+        commandManager.registerSuggestion(SuggestionKey.of("deafen-actions"), (sender, context) ->
+            List.of("check", "list", "toggle", "time", "clear"));
+        commandManager.registerSuggestion(SuggestionKey.of("online-players"), (sender, context) -> Bukkit.getOnlinePlayers().stream()
+            .map(Player::getName)
+            .collect(Collectors.toList()));
         commandManager.registerSuggestion(ChatUser.class, ((sender, context) -> Bukkit.getOnlinePlayers().stream()
             .map(Player::getName)
             .collect(Collectors.toList())));
@@ -272,7 +287,9 @@ public final class ChatChatPlugin extends JavaPlugin {
             new IgnoreCommand(this),
             new UnignoreCommand(this),
             new IgnoreListCommand(this),
+            new DeafenCommand(this),
             new ReloadCommand(this),
+            new ManageDeafenCommand(this),
             new MentionToggleCommand(this),
             new FormatTestCommand(this),
             new DumpCommand(this),

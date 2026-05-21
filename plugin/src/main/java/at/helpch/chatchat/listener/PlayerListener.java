@@ -9,6 +9,8 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.jetbrains.annotations.NotNull;
 
+import java.time.format.DateTimeFormatter;
+
 public final class PlayerListener implements Listener {
 
     private final ChatChatPlugin plugin;
@@ -19,7 +21,17 @@ public final class PlayerListener implements Listener {
 
     @EventHandler
     private void onJoin(final PlayerJoinEvent event) {
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> plugin.usersHolder().getUser(event.getPlayer()));
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            final var user = plugin.usersHolder().getUser(event.getPlayer());
+            final var uuid = event.getPlayer().getUniqueId();
+
+            if (!plugin.deafenManager().isDeafened(uuid)) {
+                return;
+            }
+
+            Bukkit.getScheduler().runTask(plugin, () -> user.sendMessage(plugin.configManager().messages().deafenStillActive()
+                .replaceText(builder -> builder.matchLiteral("<expires>").replacement(expiresAt(uuid)))));
+        });
     }
 
     @EventHandler
@@ -34,5 +46,11 @@ public final class PlayerListener implements Listener {
                 .forEach(user -> user.lastMessagedUser(null));
 
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> plugin.usersHolder().removeUser(event.getPlayer().getUniqueId()));
+    }
+
+    private @NotNull String expiresAt(@NotNull final java.util.UUID uuid) {
+        return plugin.deafenManager().expiresAt(uuid)
+            .map(DateTimeFormatter.ISO_INSTANT::format)
+            .orElse("never");
     }
 }
