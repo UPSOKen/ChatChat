@@ -9,3 +9,7 @@
 </p>
 
 Soon:tm:
+
+## Fork additions
+
+This fork adds a persistent `/deafen` command for muting public chat per-player, including timed and permanent deafens, `/deafen clear`, join reminders, admin management through `/chatchat manage-deafen`, and Paper-native Adventure/MiniMessage component handling.
