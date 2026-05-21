@@ -11,7 +11,9 @@ plugins {
     id("xyz.jpenilla.resource-factory") version "1.2.0"
 }
 
-version = "${rootProject.version}-${System.getenv("BUILD_NUMBER")}"
+version = System.getenv("BUILD_NUMBER")
+    ?.let { "${rootProject.version}-$it" }
+    ?: rootProject.version
 
 repositories {
     papi()
@@ -226,6 +228,10 @@ sourceSets.main {
 }
 
 tasks {
+    build {
+        dependsOn(shadowJar)
+    }
+
     test {
         useJUnitPlatform()
     }
