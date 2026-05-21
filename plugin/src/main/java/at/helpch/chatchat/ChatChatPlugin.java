@@ -30,6 +30,7 @@ import at.helpch.chatchat.data.impl.gson.GsonDatabase;
 import at.helpch.chatchat.deafen.DeafenManager;
 import at.helpch.chatchat.hooks.HookManagerImpl;
 import at.helpch.chatchat.listener.ChatListener;
+import at.helpch.chatchat.listener.CommandRedirectListener;
 import at.helpch.chatchat.listener.PlayerListener;
 import at.helpch.chatchat.mention.MentionManagerImpl;
 import at.helpch.chatchat.placeholder.MiniPlaceholderManagerImpl;
@@ -59,6 +60,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Collections;
 import java.util.stream.Collectors;
 
 @BukkitMain
@@ -89,6 +91,7 @@ public final class ChatChatPlugin extends JavaPlugin {
 
     private BukkitCommandManager<User> commandManager;
     private BukkitTask dataSaveTask;
+    private Map<String, String> commandRedirects = Collections.emptyMap();
 
     private static long cacheDuration;
 
@@ -121,7 +124,8 @@ public final class ChatChatPlugin extends JavaPlugin {
         // event listener registration
         List.of(
             new PlayerListener(this),
-            new ChatListener(this)
+            new ChatListener(this),
+            new CommandRedirectListener(this)
         ).forEach(listener -> getServer().getPluginManager().registerEvents(listener, this));
 
         new PlaceholderAPIPlaceholders(this).register();
@@ -209,6 +213,10 @@ public final class ChatChatPlugin extends JavaPlugin {
 
     public @NotNull ChatChatAPIImpl api() {
         return api;
+    }
+
+    public @NotNull Map<String, String> commandRedirects() {
+        return commandRedirects;
     }
 
     private void registerArguments() {
@@ -307,10 +315,15 @@ public final class ChatChatPlugin extends JavaPlugin {
             .map(commandNames -> new SwitchChannelCommand(this, commandNames.get(0), commandNames.subList(1, commandNames.size())))
             .forEach(commandManager::registerCommand);
 
-        claimChatChatCommandAliases();
+        final var commandAliases = chatChatCommandAliases();
+        commandRedirects = commandAliases.entrySet()
+            .stream()
+            .flatMap(entry -> entry.getValue().stream().map(alias -> Map.entry(alias, entry.getKey())))
+            .collect(Collectors.toUnmodifiableMap(Map.Entry::getKey, Map.Entry::getValue, (first, second) -> first));
+        claimChatChatCommandAliases(commandAliases);
     }
 
-    private void claimChatChatCommandAliases() {
+    private Map<String, List<String>> chatChatCommandAliases() {
         final Map<String, List<String>> commandAliases = new LinkedHashMap<>();
         commandAliases.put("chatchat", List.of("chatchat"));
         commandAliases.put("togglechat", List.of("togglechat"));
@@ -333,6 +346,10 @@ public final class ChatChatPlugin extends JavaPlugin {
             .filter(commandNames -> !commandNames.isEmpty())
             .forEach(commandNames -> commandAliases.put(commandNames.get(0), commandNames));
 
+        return commandAliases;
+    }
+
+    private void claimChatChatCommandAliases(final Map<String, List<String>> commandAliases) {
         var claimedAll = true;
         for (final var entry : commandAliases.entrySet()) {
             claimedAll &= CommandAliasClaimer.claimAliases(this, entry.getKey(), entry.getValue());
