@@ -2,6 +2,7 @@ package at.helpch.chatchat.util;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
@@ -26,6 +27,19 @@ public final class CommandAliasClaimer {
         } catch (final ReflectiveOperationException | RuntimeException exception) {
             plugin.getLogger().warning("Unable to claim command aliases for /" + commandName + ": " + exception.getMessage());
             return false;
+        }
+    }
+
+    public static void syncCommands(@NotNull final JavaPlugin plugin) {
+        try {
+            final Method method = plugin.getServer().getClass().getMethod("syncCommands");
+            method.invoke(plugin.getServer());
+        } catch (final ReflectiveOperationException | RuntimeException exception) {
+            plugin.getLogger().warning("Unable to sync server command tree: " + exception.getMessage());
+        }
+
+        for (final Player player : plugin.getServer().getOnlinePlayers()) {
+            player.updateCommands();
         }
     }
 

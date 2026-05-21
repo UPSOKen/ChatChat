@@ -6,10 +6,14 @@ import dev.triumphteam.cmd.core.annotation.Optional;
 import dev.triumphteam.cmd.core.annotation.SubCommand;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class CommandRegistrationShapeTest {
 
@@ -58,5 +62,32 @@ class CommandRegistrationShapeTest {
         final var command = WhisperCommand.class.getAnnotation(Command.class);
 
         assertFalse(Arrays.asList(command.alias()).contains("m"));
+    }
+
+    @Test
+    void pluginYamlDeclaresConflictingCommandLabels() throws IOException {
+        final var resource = CommandRegistrationShapeTest.class.getClassLoader().getResourceAsStream("plugin.yml");
+        assertNotNull(resource);
+        final var pluginYaml = new String(resource.readAllBytes(), StandardCharsets.UTF_8);
+
+        for (final var command : List.of(
+            "chatchat",
+            "togglechat",
+            "deafen",
+            "ignore",
+            "unignore",
+            "ignorelist",
+            "togglemention",
+            "rangedchat",
+            "whisper",
+            "reply",
+            "socialspy",
+            "togglemsg"
+        )) {
+            assertTrue(
+                pluginYaml.contains("    " + command + ":"),
+                () -> "plugin.yml should declare /" + command
+            );
+        }
     }
 }

@@ -73,6 +73,59 @@ val yaml = bukkitPluginYaml {
         loadBefore = listOf("Essentials")
     }
 
+    commands {
+        create("chatchat") {
+            description.set("ChatChat admin and utility commands")
+        }
+        create("togglechat") {
+            description.set("Toggle public chat visibility")
+            permission.set("chatchat.togglechat")
+        }
+        create("deafen") {
+            description.set("Mute public chat for yourself")
+            permission.set("chatchat.deafen")
+        }
+        create("ignore") {
+            description.set("Ignore a player in chat")
+            permission.set("chatchat.ignore")
+        }
+        create("unignore") {
+            description.set("Stop ignoring a player in chat")
+            permission.set("chatchat.ignore")
+        }
+        create("ignorelist") {
+            description.set("List ignored players")
+            permission.set("chatchat.ignorelist")
+        }
+        create("togglemention") {
+            aliases.add("toggleping")
+            description.set("Toggle mention notifications")
+        }
+        create("rangedchat") {
+            description.set("Send a ranged chat message")
+        }
+        create("whisper") {
+            aliases.addAll("tell", "w", "msg", "message", "pm")
+            description.set("Send a private message")
+            permission.set("chatchat.pm")
+        }
+        create("reply") {
+            aliases.add("r")
+            description.set("Reply to a private message")
+            permission.set("chatchat.pm")
+        }
+        create("socialspy") {
+            aliases.addAll("sspy", "pmspy", "spy")
+            description.set("Toggle private message social spy")
+            permission.set("chatchat.socialspy")
+        }
+        create("togglemsg") {
+            aliases.addAll("toggledms", "togglepms")
+            description.set("Toggle private messages")
+            permission.set("chatchat.pm.toggle")
+        }
+    }
+
     permissions {
         create("chatchat.admin") {
             description = "Execute admin commands"
@@ -117,6 +170,14 @@ val yaml = bukkitPluginYaml {
 
         create("chatchat.deafen") {
             description = "Deafen yourself from public chat"
+            default = Permission.Default.OP
+        }
+        create("chatchat.togglechat") {
+            description = "Toggle public chat visibility"
+            default = Permission.Default.OP
+        }
+        create("chatchat.rangedchat") {
+            description = "Toggle ranged chat"
             default = Permission.Default.OP
         }
 

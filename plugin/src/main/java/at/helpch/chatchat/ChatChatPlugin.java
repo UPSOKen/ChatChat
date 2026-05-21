@@ -55,7 +55,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.time.Clock;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -296,7 +298,6 @@ public final class ChatChatPlugin extends JavaPlugin {
                 new WhisperToggleCommand(this),
                 new SocialSpyCommand(this)
             ).forEach(commandManager::registerCommand);
-            claimPrivateMessageCommandAliases();
         }
 
         // register channel commands
@@ -305,19 +306,43 @@ public final class ChatChatPlugin extends JavaPlugin {
             .filter(s -> !s.isEmpty())
             .map(commandNames -> new SwitchChannelCommand(this, commandNames.get(0), commandNames.subList(1, commandNames.size())))
             .forEach(commandManager::registerCommand);
+
+        claimChatChatCommandAliases();
     }
 
-    private void claimPrivateMessageCommandAliases() {
-        final var whisperClaimed = CommandAliasClaimer.claimAliases(
-            this,
-            "whisper",
-            List.of("whisper", "tell", "w", "msg", "message", "pm")
-        );
-        final var replyClaimed = CommandAliasClaimer.claimAliases(this, "reply", List.of("reply", "r"));
+    private void claimChatChatCommandAliases() {
+        final Map<String, List<String>> commandAliases = new LinkedHashMap<>();
+        commandAliases.put("chatchat", List.of("chatchat"));
+        commandAliases.put("togglechat", List.of("togglechat"));
+        commandAliases.put("deafen", List.of("deafen"));
+        commandAliases.put("ignore", List.of("ignore"));
+        commandAliases.put("unignore", List.of("unignore"));
+        commandAliases.put("ignorelist", List.of("ignorelist"));
+        commandAliases.put("togglemention", List.of("togglemention", "toggleping"));
+        commandAliases.put("rangedchat", List.of("rangedchat"));
 
-        if (!whisperClaimed || !replyClaimed) {
-            getLogger().warning("Could not claim every private-message command alias. "
-                + "Server commands.yml aliases may still be required for private messages.");
+        if (configManager.settings().privateMessagesSettings().enabled()) {
+            commandAliases.put("whisper", List.of("whisper", "tell", "w", "msg", "message", "pm"));
+            commandAliases.put("reply", List.of("reply", "r"));
+            commandAliases.put("socialspy", List.of("socialspy", "sspy", "pmspy", "spy"));
+            commandAliases.put("togglemsg", List.of("togglemsg", "toggledms", "togglepms"));
         }
+
+        configManager.channels().channels().values().stream()
+            .map(Channel::commandNames)
+            .filter(commandNames -> !commandNames.isEmpty())
+            .forEach(commandNames -> commandAliases.put(commandNames.get(0), commandNames));
+
+        var claimedAll = true;
+        for (final var entry : commandAliases.entrySet()) {
+            claimedAll &= CommandAliasClaimer.claimAliases(this, entry.getKey(), entry.getValue());
+        }
+
+        if (!claimedAll) {
+            getLogger().warning("Could not claim every ChatChat command alias. "
+                + "Server commands.yml aliases may still be required for conflicting commands.");
+        }
+
+        CommandAliasClaimer.syncCommands(this);
     }
 }
