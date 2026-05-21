@@ -4,6 +4,7 @@ import at.helpch.chatchat.ChatChatPlugin;
 import at.helpch.chatchat.api.user.User;
 import at.helpch.chatchat.deafen.TimecodeParser;
 import dev.triumphteam.cmd.bukkit.annotation.Permission;
+import dev.triumphteam.cmd.core.annotation.Join;
 import dev.triumphteam.cmd.core.annotation.Optional;
 import dev.triumphteam.cmd.core.annotation.SubCommand;
 import dev.triumphteam.cmd.core.annotation.Suggestion;
@@ -30,15 +31,21 @@ public final class ManageDeafenCommand extends ChatChatCommand {
     public void manage(
         final User sender,
         final @Suggestion("deafen-actions") String action,
-        final @Suggestion("online-players") @Optional String target,
-        final @Optional String timecode
+        final @Suggestion("online-players") @Join @Optional String arguments
     ) {
         switch (action.toLowerCase()) {
-            case "check" -> check(sender, target);
+            case "check" -> check(sender, firstArgument(arguments));
             case "list" -> list(sender);
-            case "toggle" -> toggle(sender, target);
-            case "time" -> time(sender, target, timecode);
-            case "clear" -> clear(sender, target);
+            case "toggle" -> toggle(sender, firstArgument(arguments));
+            case "time" -> {
+                final var splitArguments = splitArguments(arguments, 2);
+                time(
+                    sender,
+                    splitArguments.length > 0 ? splitArguments[0] : null,
+                    splitArguments.length > 1 ? splitArguments[1] : null
+                );
+            }
+            case "clear" -> clear(sender, firstArgument(arguments));
             default -> sender.sendMessage(plugin.configManager().messages().invalidUsage());
         }
 
@@ -154,6 +161,19 @@ public final class ManageDeafenCommand extends ChatChatCommand {
 
         final OfflinePlayer offline = Bukkit.getOfflinePlayer(input);
         return new TargetPlayer(offline.getUniqueId(), offline.getName() == null ? input : offline.getName());
+    }
+
+    private static String firstArgument(final String arguments) {
+        final var splitArguments = splitArguments(arguments, 2);
+        return splitArguments.length == 0 ? null : splitArguments[0];
+    }
+
+    private static String @NotNull [] splitArguments(final String arguments, final int limit) {
+        if (arguments == null || arguments.isBlank()) {
+            return new String[0];
+        }
+
+        return arguments.trim().split("\\s+", limit);
     }
 
     private record TargetPlayer(@NotNull UUID uuid, @NotNull String name) {

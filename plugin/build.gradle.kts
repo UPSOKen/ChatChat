@@ -49,6 +49,7 @@ dependencies {
     testImplementation(platform(libs.junit.bom))
     testImplementation(libs.gson)
     testImplementation(libs.junit.jupiter)
+    testRuntimeOnly(libs.spigot)
 }
 
 val yaml = bukkitPluginYaml {

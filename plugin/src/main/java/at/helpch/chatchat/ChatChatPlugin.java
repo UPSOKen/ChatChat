@@ -156,7 +156,7 @@ public final class ChatChatPlugin extends JavaPlugin {
         getServer().getServicesManager().unregisterAll(this);
 
         audiences.close();
-        if (!dataSaveTask.isCancelled()) dataSaveTask.cancel();
+        if (dataSaveTask != null && !dataSaveTask.isCancelled()) dataSaveTask.cancel();
 
         for (final Player player : Bukkit.getOnlinePlayers()) {
             usersHolder.removeUser(player);
