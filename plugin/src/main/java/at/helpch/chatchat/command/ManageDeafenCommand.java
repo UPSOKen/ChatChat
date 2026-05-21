@@ -2,6 +2,7 @@ package at.helpch.chatchat.command;
 
 import at.helpch.chatchat.ChatChatPlugin;
 import at.helpch.chatchat.api.user.User;
+import at.helpch.chatchat.deafen.DeafenTimeFormatter;
 import at.helpch.chatchat.deafen.TimecodeParser;
 import dev.triumphteam.cmd.bukkit.annotation.Permission;
 import dev.triumphteam.cmd.core.annotation.Join;
@@ -13,7 +14,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 
-import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -142,7 +142,7 @@ public final class ManageDeafenCommand extends ChatChatCommand {
 
     private @NotNull String expiresAt(@NotNull final UUID uuid) {
         return plugin.deafenManager().expiresAt(uuid)
-            .map(DateTimeFormatter.ISO_INSTANT::format)
+            .map(DeafenTimeFormatter::format)
             .orElse("never");
     }
 

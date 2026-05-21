@@ -185,7 +185,7 @@ public final class ChatUserImpl implements ChatUser {
 
     @Override
     public @NotNull Audience audience() {
-        return ChatChatPlugin.audiences().player(uuid);
+        return player().map(value -> (Audience) value).orElse(Audience.empty());
     }
 
     @Override

@@ -31,14 +31,21 @@ repositories {
     maven("https://repo.essentialsx.net/releases/")
 }
 
+configurations.configureEach {
+    exclude(group = "org.spigotmc", module = "spigot-api")
+}
+
 dependencies {
     implementation(projects.chatChatApi)
 
     implementation(libs.triumph.cmds)
     implementation(libs.configurate)
+    implementation(libs.adventure.configurate) {
+        exclude(group = "net.kyori")
+    }
     implementation(libs.bstats)
 
-    compileOnly(libs.spigot)
+    compileOnly(libs.paper)
     compileOnly(libs.papi)
     compileOnly(libs.towny)
     compileOnly(libs.essentials)
@@ -49,7 +56,7 @@ dependencies {
     testImplementation(platform(libs.junit.bom))
     testImplementation(libs.gson)
     testImplementation(libs.junit.jupiter)
-    testRuntimeOnly(libs.spigot)
+    testRuntimeOnly(libs.paper)
 }
 
 val yaml = bukkitPluginYaml {
@@ -239,7 +246,6 @@ tasks {
 
     withType<ShadowJar> {
         listOf(
-            "net.kyori",
             "dev.triumphteam",
             "org.spongepowered",
             "io.leangen",

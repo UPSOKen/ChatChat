@@ -1,10 +1,9 @@
 [versions]
 # Minecraft
-spigot = "1.21.4-R0.1-SNAPSHOT"
+paper = "1.21.11-R0.1-SNAPSHOT"
 
 # Adventure
-minimessage = "4.16.0"
-adventure-platform = "4.3.4"
+adventure = "4.26.1"
 
 # Other
 configurate = "4.1.2"
@@ -21,12 +20,10 @@ gson = "2.11.0"
 
 [libraries]
 # Minecraft
-spigot = { module = "org.spigotmc:spigot-api", version.ref = "spigot" }
+paper = { module = "io.papermc.paper:paper-api", version.ref = "paper" }
 
 # Adventure
-adventure-bukkit = { module = "net.kyori:adventure-platform-bukkit", version.ref = "adventure-platform" }
-adventure-configurate = { module = "net.kyori:adventure-serializer-configurate4", version.ref = "adventure-platform" }
-adventure-minimessage = { module = "net.kyori:adventure-text-minimessage", version.ref = "minimessage" }
+adventure-configurate = { module = "net.kyori:adventure-serializer-configurate4", version.ref = "adventure" }
 
 # Other
 configurate = { module = "org.spongepowered:configurate-yaml", version.ref = "configurate" }

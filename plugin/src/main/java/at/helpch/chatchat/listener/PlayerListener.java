@@ -2,14 +2,13 @@ package at.helpch.chatchat.listener;
 
 import at.helpch.chatchat.ChatChatPlugin;
 import at.helpch.chatchat.api.user.ChatUser;
+import at.helpch.chatchat.deafen.DeafenTimeFormatter;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.jetbrains.annotations.NotNull;
-
-import java.time.format.DateTimeFormatter;
 
 public final class PlayerListener implements Listener {
 
@@ -50,7 +49,7 @@ public final class PlayerListener implements Listener {
 
     private @NotNull String expiresAt(@NotNull final java.util.UUID uuid) {
         return plugin.deafenManager().expiresAt(uuid)
-            .map(DateTimeFormatter.ISO_INSTANT::format)
+            .map(DeafenTimeFormatter::format)
             .orElse("never");
     }
 }

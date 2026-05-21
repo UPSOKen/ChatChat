@@ -53,6 +53,10 @@ public final class MessagesHolder {
     private Component deafenTimed = text("You are deafened from public chat until <expires>.", GREEN);
     private Component deafenStillActive = text("You are still deafened from public chat until <expires>.", YELLOW);
     private Component deafenInvalidTime = text("Invalid deafen time. Use a positive duration like 5m, 1h, or 3d.", RED);
+    private Component deafenSelfStatusNone = text("You are not deafened. Use /deafen toggle or /deafen time 1h to deafen yourself.", YELLOW);
+    private Component deafenSelfStatusPermanent = text("You are permanently deafened from public chat. Use /deafen clear to hear chat again.", YELLOW);
+    private Component deafenSelfStatusTemporary = text("You are deafened from public chat until <expires>. Use /deafen clear to hear chat again.", YELLOW);
+    private Component deafenClearNotActive = text("You are not deafened from public chat.", YELLOW);
     private Component deafenStatusNone = text("<player> is not deafened.", GREEN);
     private Component deafenStatusPermanent = text("<player> is permanently deafened from public chat.", YELLOW);
     private Component deafenStatusTemporary = text("<player> is deafened from public chat until <expires>.", YELLOW);
@@ -274,6 +278,22 @@ public final class MessagesHolder {
 
     public @NotNull Component deafenInvalidTime() {
         return deafenInvalidTime;
+    }
+
+    public @NotNull Component deafenSelfStatusNone() {
+        return deafenSelfStatusNone;
+    }
+
+    public @NotNull Component deafenSelfStatusPermanent() {
+        return deafenSelfStatusPermanent;
+    }
+
+    public @NotNull Component deafenSelfStatusTemporary() {
+        return deafenSelfStatusTemporary;
+    }
+
+    public @NotNull Component deafenClearNotActive() {
+        return deafenClearNotActive;
     }
 
     public @NotNull Component deafenStatusNone() {

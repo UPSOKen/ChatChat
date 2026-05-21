@@ -20,7 +20,7 @@ public interface GlobalFormatsHolder extends FormatsHolder {
 
     /**
      * Get the console format. This is the format that is used for console output. Console needs a special format
-     * because spigot does not support Components so not all MiniMessage features can be used.
+     * because legacy chat output does not support Components so not all MiniMessage features can be used.
      *
      * @return The console format.
      */
